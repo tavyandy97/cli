@@ -10,6 +10,7 @@ import (
 
 	"github.com/MakeNowJust/heredoc"
 	"github.com/cli/cli/api"
+	"github.com/cli/cli/git"
 	"github.com/cli/cli/internal/ghinstance"
 	"github.com/cli/cli/internal/ghrepo"
 	"github.com/cli/cli/pkg/cmdutil"
@@ -109,6 +110,12 @@ func viewRun(opts *ViewOptions) error {
 
 	fullName := ghrepo.FullName(toView)
 
+	if opts.Branch == "" {
+		currentBranch, err := git.CurrentBranch()
+		if err == nil {
+			opts.Branch = currentBranch
+		}
+	}
 	readme, err := RepositoryReadme(httpClient, toView, opts.Branch)
 	if err != nil && err != NotFoundError {
 		return err
