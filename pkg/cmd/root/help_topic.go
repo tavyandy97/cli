@@ -28,7 +28,7 @@ func NewHelpTopic(topic string) *cobra.Command {
 		DEBUG: set to any value to enable verbose output to standard error. Include values "api"
 		or "oauth" to print detailed information about HTTP requests or authentication flow.
 
-		PAGER: a terminal paging program to send standard output to, e.g. "less".
+		GH_PAGER, PAGER (in order of precedence): a terminal paging program to send standard output to, e.g. "less".
 
 		GLAMOUR_STYLE: the style to use for rendering Markdown. See
 		https://github.com/charmbracelet/glamour#styles
@@ -39,6 +39,10 @@ func NewHelpTopic(topic string) *cobra.Command {
 
 		CLICOLOR_FORCE: set to a value other than "0" to keep ANSI colors in output
 		even when the output is piped.
+
+		GH_NO_UPDATE_NOTIFIER: set to any value to disable update notifications. By default, gh
+		checks for new releases once every 24 hours and displays an upgrade notice on standard
+		error if a newer version was found.
 	`)
 
 	cmd := &cobra.Command{

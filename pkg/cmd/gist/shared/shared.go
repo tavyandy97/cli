@@ -10,13 +10,15 @@ import (
 	"github.com/cli/cli/api"
 )
 
-// TODO make gist create use this file
-
 type GistFile struct {
-	Filename string `json:"filename"`
+	Filename string `json:"filename,omitempty"`
 	Type     string `json:"type,omitempty"`
 	Language string `json:"language,omitempty"`
-	Content  string `json:"content"`
+	Content  string `json:"content,omitempty"`
+}
+
+type GistOwner struct {
+	Login string `json:"login,omitempty"`
 }
 
 type Gist struct {
@@ -25,6 +27,8 @@ type Gist struct {
 	Files       map[string]*GistFile `json:"files"`
 	UpdatedAt   time.Time            `json:"updated_at"`
 	Public      bool                 `json:"public"`
+	HTMLURL     string               `json:"html_url,omitempty"`
+	Owner       *GistOwner           `json:"owner,omitempty"`
 }
 
 func GetGist(client *http.Client, hostname, gistID string) (*Gist, error) {

@@ -32,6 +32,9 @@ type CreateOptions struct {
 
 	Interactive bool
 
+	TitleProvided bool
+	BodyProvided  bool
+
 	RootDirOverride string
 	RepoOverride    string
 
@@ -78,16 +81,16 @@ func NewCmdCreate(f *cmdutil.Factory, runF func(*CreateOptions) error) *cobra.Co
 			$ gh pr create --reviewer monalisa,hubot
 			$ gh pr create --project "Roadmap"
 			$ gh pr create --base develop --head monalisa:feature
-    	`),
+		`),
 		Args: cmdutil.NoArgsQuoteReminder,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			titleProvided := cmd.Flags().Changed("title")
-			bodyProvided := cmd.Flags().Changed("body")
+			opts.TitleProvided = cmd.Flags().Changed("title")
+			opts.BodyProvided = cmd.Flags().Changed("body")
 			opts.RepoOverride, _ = cmd.Flags().GetString("repo")
 
-			opts.Interactive = !(titleProvided && bodyProvided)
+			opts.Interactive = !(opts.TitleProvided && opts.BodyProvided)
 
-			if !opts.IO.CanPrompt() && !opts.WebMode && !titleProvided && !opts.Autofill {
+			if !opts.IO.CanPrompt() && !opts.WebMode && !opts.TitleProvided && !opts.Autofill {
 				return &cmdutil.FlagError{Err: errors.New("--title or --fill required when not running interactively")}
 			}
 
@@ -181,13 +184,13 @@ func createRun(opts *CreateOptions) error {
 		// determine whether the head branch is already pushed to a remote
 		if pushedTo := determineTrackingBranch(remotes, headBranch); pushedTo != nil {
 			isPushEnabled = false
-			for _, r := range remotes {
-				if r.Name != pushedTo.RemoteName {
-					continue
-				}
+			if r, err := remotes.FindByName(pushedTo.RemoteName); err == nil {
 				headRepo = r
 				headRemote = r
-				break
+				headBranchLabel = pushedTo.BranchName
+				if !ghrepo.IsSame(baseRepo, headRepo) {
+					headBranchLabel = fmt.Sprintf("%s:%s", headRepo.RepoOwner(), pushedTo.BranchName)
+				}
 			}
 		}
 	}
@@ -287,11 +290,15 @@ func createRun(opts *CreateOptions) error {
 			return fmt.Errorf("could not compute title or body defaults: %w", defaultsErr)
 		}
 	} else if opts.Autofill {
-		if defaultsErr != nil {
+		if defaultsErr != nil && !(opts.TitleProvided || opts.BodyProvided) {
 			return fmt.Errorf("could not compute title or body defaults: %w", defaultsErr)
 		}
-		title = defs.Title
-		body = defs.Body
+		if !opts.TitleProvided {
+			title = defs.Title
+		}
+		if !opts.BodyProvided {
+			body = defs.Body
+		}
 	}
 
 	if !opts.WebMode {
@@ -315,7 +322,7 @@ func createRun(opts *CreateOptions) error {
 
 		if isTerminal {
 			fmt.Fprintf(opts.IO.ErrOut, message,
-				utils.Cyan(headBranch),
+				utils.Cyan(headBranchLabel),
 				utils.Cyan(baseBranch),
 				ghrepo.FullName(baseRepo))
 			if (title == "" || body == "") && defaultsErr != nil {
@@ -392,7 +399,7 @@ func createRun(opts *CreateOptions) error {
 	// There are two cases when an existing remote for the head repo will be
 	// missing:
 	// 1. the head repo was just created by auto-forking;
-	// 2. an existing fork was discovered by quering the API.
+	// 2. an existing fork was discovered by querying the API.
 	//
 	// In either case, we want to add the head repo as a new git remote so we
 	// can push to it.

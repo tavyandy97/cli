@@ -1,27 +1,24 @@
 ## Contributing
 
-[legal]: https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license
-[license]: ../LICENSE
-[code-of-conduct]: CODE-OF-CONDUCT.md
-[bug issues]: https://github.com/cli/cli/issues?q=is%3Aopen+is%3Aissue+label%3Abug
-[feature request issues]: https://github.com/cli/cli/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement
-
 Hi! Thanks for your interest in contributing to the GitHub CLI!
 
 We accept pull requests for bug fixes and features where we've discussed the approach in an issue and given the go-ahead for a community member to work on it. We'd also love to hear about ideas for new features as issues.
 
 Please do:
 
-* check existing issues to verify that the [bug][bug issues] or [feature request][feature request issues] has not already been submitted
-* open an issue if things aren't working as expected
-* open an issue to propose a significant change
-* open a pull request to fix a bug
-* open a pull request to fix documentation about a command
-* open a pull request if a member of the GitHub CLI team has given the ok after discussion in an issue
+* Check existing issues to verify that the [bug][bug issues] or [feature request][feature request issues] has not already been submitted.
+* Open an issue if things aren't working as expected.
+* Open an issue to propose a significant change.
+* Open a pull request to fix a bug.
+* Open a pull request to fix documentation about a command.
+* Open a pull request for any issue labelled [`help wanted`][hw] or [`good first issue`][gfi].
 
 Please avoid:
 
-* adding installation instructions specifically for your OS/package manager
+* Opening pull requests for issues marked `needs-design`, `needs-investigation`, or `blocked`.
+* Adding installation instructions specifically for your OS/package manager.
+* Opening pull requests for any issue marked `core`. These issues require additional context from
+  the core CLI team at GitHub and any external pull requests will not be accepted.
 
 ## Building the project
 
@@ -49,6 +46,18 @@ We generate manual pages from source on every release. You do not need to submit
 
 ## Resources
 
-- [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
-- [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
-- [GitHub Help](https://help.github.com)
+- [How to Contribute to Open Source][]
+- [Using Pull Requests][]
+- [GitHub Help][]
+
+
+[bug issues]: https://github.com/cli/cli/issues?q=is%3Aopen+is%3Aissue+label%3Abug
+[feature request issues]: https://github.com/cli/cli/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement
+[hw]: https://github.com/cli/cli/labels/help%20wanted
+[gfi]: https://github.com/cli/cli/labels/good%20first%20issue
+[legal]: https://docs.github.com/en/free-pro-team@latest/github/site-policy/github-terms-of-service#6-contributions-under-repository-license
+[license]: ../LICENSE
+[code-of-conduct]: ./CODE-OF-CONDUCT.md
+[How to Contribute to Open Source]: https://opensource.guide/how-to-contribute/
+[Using Pull Requests]: https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/about-pull-requests
+[GitHub Help]: https://docs.github.com/
